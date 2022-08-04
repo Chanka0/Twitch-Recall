@@ -8,7 +8,7 @@ Basically a remake of [TwitchRecover](https://github.com/TwitchRecover/TwitchRec
 - Quick
 
 ## How To Use
-1. Run the executable or open it in the console of your choice
+1. Open it in the console of your choice
 2. Grab the TwitchTracker link for the stream (Streamer -> Streams -> The stream you want)
 3. Copy the link into the program when prompted (should look like https://twitchtracker.com/channel/streams/stream_id)
 4. Hit enter
@@ -32,3 +32,7 @@ If a stream isn't showing up there could be a few reasons for it.
 @daylamtayari for creating [TwitchRecover](https://github.com/TwitchRecover/TwitchRecover)
 
 @ItIckeYd for gathering a domain name list for scraping VODS
+
+
+
+hey, can you tell this is my first rust project? i sure can...

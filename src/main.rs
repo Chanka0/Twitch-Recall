@@ -1,3 +1,5 @@
+use std::str::SplitTerminator;
+
 use reqwest;
 use scraper::{self, ElementRef, Html, Selector};
 use regex::{self, Regex};
@@ -10,45 +12,18 @@ struct VOD {
     timestamp: i64
 }
 
+//TODO Fix the horrible str/String intermingling. Standardization is needed so the inefficient conversions stop happening.
+
 #[tokio::main]
 async fn main(){
-
-    let domains = vec![
-        "https://vod-secure.twitch.tv/",
-        "https://vod-metro.twitch.tv/",
-        "https://vod-pop-secure.twitch.tv/",
-        "https://d2e2de1etea730.cloudfront.net/",
-        "https://dqrpb9wgowsf5.cloudfront.net/",
-        "https://ds0h3roq6wcgc.cloudfront.net/",
-        "https://d2nvs31859zcd8.cloudfront.net/",
-        "https://d2aba1wr3818hz.cloudfront.net/",
-        "https://d3c27h4odz752x.cloudfront.net/",
-        "https://dgeft87wbj63p.cloudfront.net/",
-        "https://d1m7jfoe9zdc1j.cloudfront.net/",
-        "https://d3vd9lfkzbru3h.cloudfront.net/",
-        "https://d2vjef5jvl6bfs.cloudfront.net/",
-        "https://d1ymi26ma8va5x.cloudfront.net/",
-        "https://d1mhjrowxxagfy.cloudfront.net/",
-        "https://ddacn6pr5v0tl.cloudfront.net/",
-        "https://d3aqoihi2n8ty8.cloudfront.net/",
-        "https://d1xhnb4ptk05mw.cloudfront.net/",
-        "https://d6tizftlrpuof.cloudfront.net/",
-        "https://d36nr0u3xmc4mm.cloudfront.net/",
-        "https://d1oca24q5dwo6d.cloudfront.net/",
-        "https://d2um2qdswy1tb0.cloudfront.net/",
-        "https://d1w2poirtb3as9.cloudfront.net/",
-        "https://d6d4ismr40iw.cloudfront.net/",
-        "https://d1g1f25tn8m2e6.cloudfront.net/",
-        "https://dykkng5hnh52u.cloudfront.net/",
-        "https://d2dylwb3shzel1.cloudfront.net/",
-        "https://d2xmjdvx03ij56.cloudfront.net/",
-    ];
 
     let mut url = String::new();
     println!("Enter VOD URL: ");
     std::io::stdin().read_line(&mut url).unwrap();
 
     let site_type = parse_url(&url);
+    let list = req_workaround(&"https://raw.githubusercontent.com/Chanka0/Twitch-Recall/master/domains.txt".to_string()).await.unwrap().text().await.unwrap();
+    let domains = list.split_terminator("\n");
 
     if site_type == -1 {
         println!("URL was invalid. Make sure to use the supported sites, and input a URL like this:\nhttps://twitchtracker.com/channel/streams/stream_id");
@@ -61,7 +36,7 @@ async fn main(){
 
 }
 
-async fn scrape_vods(vod: VOD, domains: Vec<&str>){
+async fn scrape_vods(vod: VOD, domains: SplitTerminator<'_, &str>){
     println!("Stream Timestamp: {}", vod.timestamp);
     println!("Streamer: {}", vod.username);
     println!("Stream ID: {}", vod.stream_id);
